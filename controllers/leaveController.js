@@ -52,6 +52,10 @@ const leaveController = async (req, res) => {
 
 const getAllEmployeeLeave = async (req, res) => {
   try {
+    
+    if(!req.user){
+      return res.status(422).json({status: false, message: "employee can't access to this data" });
+    }
    
     const savedLeaves = await Leave.find().populate("EmployeeName");
 
