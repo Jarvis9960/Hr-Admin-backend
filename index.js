@@ -7,6 +7,7 @@ const employeeAuth = require("./routes/employeeAuthRoute");
 const addEmployee = require("./routes/addEmployeeRoute");
 const addHoliday = require("./routes/holidayRoute");
 const leave = require("./routes/leaveRoute");
+const employeeProfile = require("./routes/employeeProfileRoute");
 const path = require("path");
 
 const app = express();
@@ -19,7 +20,8 @@ app.use(adminAuth);
 app.use(employeeAuth);
 app.use(addEmployee);
 app.use(addHoliday);
-app.use(leave)
+app.use(leave);
+app.use(employeeProfile);
 
 const port = 5000;
 app.listen(port, (req, res) => {
