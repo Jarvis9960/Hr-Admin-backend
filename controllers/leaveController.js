@@ -52,6 +52,7 @@ const leaveController = async (req, res) => {
 
 const getAllEmployeeLeave = async (req, res) => {
   try {
+    console.log(req.user)
     const savedLeaves = await Leave.find().populate("EmployeeName");
 
     if (savedLeaves) {
