@@ -43,7 +43,7 @@ connectDB()
   });
 
 const io = socket(server, {
-  pingTimeout: 60000,
+  pingTimeout: 120000,
   cors: {
     origin: "http://localhost:3000",
     credentials: true,
