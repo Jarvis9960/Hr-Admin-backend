@@ -1,5 +1,12 @@
 const Profile = require("../models/profileSchema");
 const Employee = require("../models/EmployeeSchema");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dmq6xw2ux",
+  api_key: "739671846821257",
+  api_secret: "udhZGXBeBbM4-PCWhwO77_0G0Ww",
+});
 
 const addemployeeProfileController = async (req, res) => {
   try {
@@ -34,8 +41,6 @@ const addemployeeProfileController = async (req, res) => {
       isfcCode,
       panNo,
     } = req.body;
-
-    console.log(team, birthday, address, gender, reportTo, idNo, nationality, religion, martialStatus, emergencyContactName, emergencyContactRelation, emergencyContactNumber, bankAccNo, bankName, isfcCode, panNo)
 
     if (
       !team ||
@@ -72,6 +77,34 @@ const addemployeeProfileController = async (req, res) => {
       });
     }
 
+    const panImage = req.files.image[0];
+
+    if (!panImage) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Pan image is not uploaded" });
+    }
+
+    const imageNameArr = panImage.originalname.split(".");
+
+    const originalName = imageNameArr[0];
+
+    const res = cloudinary.uploader.upload(panImage.path, {
+      public_id: originalName,
+    });
+
+    res
+      .then((data) => {
+        console.log(data.secure_url);
+      })
+      .catch((err) => {
+        return res
+          .status(422)
+          .json({ status: false, message: "image uploads failed" });
+      });
+
+    let savedImageUrl = await cloudinary.url(originalName, { secure: true });
+
     const newProfile = new Profile({
       EmployeeId: EmployeeId,
       Team: team,
@@ -90,6 +123,7 @@ const addemployeeProfileController = async (req, res) => {
       BankAccNo: bankAccNo,
       IFSCcode: isfcCode,
       PanNo: panNo,
+      PanImage: savedImageUrl,
     });
 
     const savedProfile = await newProfile.save();
@@ -119,7 +153,7 @@ const getCurrentEmployeeProfile = async (req, res) => {
         .json({ status: false, message: "Invalid Employee" });
     }
 
-    const currentUser = await Employee.findOne({Email: loginUser});
+    const currentUser = await Employee.findOne({ Email: loginUser });
 
     const currentUserId = currentUser._id;
 
@@ -165,5 +199,11 @@ const getAllEmployeeProfiles = async (req, res) => {
     return res
       .status(422)
       .json({ status: false, message: "something went wrong", err: error });
+  }
+};
 
-module.exports = { addemployeeProfileController, getCurrentEmployeeProfile, getAllEmployeeProfiles}
+module.exports = {
+  addemployeeProfileController,
+  getCurrentEmployeeProfile,
+  getAllEmployeeProfiles,
+};
