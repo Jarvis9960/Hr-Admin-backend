@@ -101,4 +101,33 @@ const getEmployeeLeaveById = async (req, res) => {
   }
 };
 
-module.exports = { leaveController, getAllEmployeeLeave, getEmployeeLeaveById };
+const updateEmployeeLeaveStatus = async (req, res) => {
+  try {
+    const { employeeId, status } = req.body;
+
+    if (!employeeId || !status) {
+      return res.status(422).json({
+        status: false,
+        message: "Please provide valid details to update",
+      });
+    }
+
+    const updatedLeave = await Leave.updateOne(
+      { _id: employeeId },
+      { $set: { Status: status } }
+    );
+
+    if (updatedLeave) {
+      return res
+        .status(201)
+        .json({ status: true, message: "Leave status successfully updated" });
+    }
+  } catch (error) {
+    console.log(err);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
+module.exports = { leaveController, getAllEmployeeLeave, getEmployeeLeaveById, updateEmployeeLeaveStatus };
