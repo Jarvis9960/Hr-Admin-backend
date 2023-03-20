@@ -6,6 +6,7 @@ const { protectedRouteForEmployee, protectedRoute } = require("../middlewares/pr
 router.post("/employeeleave", protectedRouteForEmployee, leaveController);
 router.get("/getemployeeleave", protectedRoute, getAllEmployeeLeave);
 router.get("/currentuserleave", protectedRouteForEmployee, getEmployeeLeaveById);
+router.patch("/updateleavestatus", protectedRoute, updateEmployeeLeaveStatus);
 
 
 module.exports = router;
