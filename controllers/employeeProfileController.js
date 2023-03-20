@@ -77,7 +77,8 @@ const addemployeeProfileController = async (req, res) => {
       });
     }
 
-    const panImage = req.files.image[0];
+    const panImage = req.files.Panimage[0];
+    const adharImage = req.files.Adharimage[0];
 
     if (!panImage) {
       return res
@@ -85,25 +86,39 @@ const addemployeeProfileController = async (req, res) => {
         .json({ status: false, message: "Pan image is not uploaded" });
     }
 
-    const imageNameArr = panImage.originalname.split(".");
+    const panimageNameArr = panImage.originalname.split(".");
+    const panOriginalName = panimageNameArr[0];
+    const adharImageNameArr = adharImage.originalname.split(".");
+    const adharOriginalName = adharImageNameArr[0];
 
-    const originalName = imageNameArr[0];
-
-    const res = cloudinary.uploader.upload(panImage.path, {
-      public_id: originalName,
+    const Panresp = cloudinary.uploader.upload(panImage.path, {
+      public_id: panOriginalName,
     });
 
-    res
-      .then((data) => {
-        console.log(data.secure_url);
-      })
-      .catch((err) => {
-        return res
-          .status(422)
-          .json({ status: false, message: "image uploads failed" });
-      });
+    Panresp.then((data) => {
+      console.log(data.secure_url);
+    }).catch((err) => {
+      return res
+        .status(422)
+        .json({ status: false, message: "image uploads failed" });
+    });
 
-    let savedImageUrl = await cloudinary.url(originalName, { secure: true });
+    const Adharresp = cloudinary.uploader.upload(adharImage.path, {
+      public_id: adharOriginalName,
+    });
+
+    Adharresp.then((data) => {
+      console.log(data.secure_url);
+    }).catch((err) => {
+      return res
+        .status(422)
+        .json({ status: false, message: "image uploads failed" });
+    });
+
+    let panSavedUrl = await cloudinary.url(panOriginalName, { secure: true });
+    let adharSavedUrl = await cloudinary.url(adharOriginalName, {
+      secure: true,
+    });
 
     const newProfile = new Profile({
       EmployeeId: EmployeeId,
@@ -123,7 +138,8 @@ const addemployeeProfileController = async (req, res) => {
       BankAccNo: bankAccNo,
       IFSCcode: isfcCode,
       PanNo: panNo,
-      PanImage: savedImageUrl,
+      PanImage: panSavedUrl,
+      AdharImage: adharSavedUrl,
     });
 
     const savedProfile = await newProfile.save();
