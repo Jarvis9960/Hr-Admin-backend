@@ -34,7 +34,7 @@ const upload = multer({
   },
 });
 
-const multipleUpload = upload.fields([{ name: "image", maxCount: 1 }]);
+const multipleUpload = upload.fields([{ name: "image", maxCount: 1 }, {name: "Adharimage", maxCount: 1}]);
 
 const {
   protectedRouteForEmployee,
