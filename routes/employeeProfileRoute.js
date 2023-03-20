@@ -6,7 +6,7 @@ const {
 const {
   addemployeeProfileController,
   getCurrentEmployeeProfile,
-  getAllEmployeeProfiles
+  getAllEmployeeProfiles,
 } = require("../controllers/employeeProfileController");
 
 router.post(
