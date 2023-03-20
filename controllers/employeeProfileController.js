@@ -146,4 +146,24 @@ const getCurrentEmployeeProfile = async (req, res) => {
   }
 };
 
-module.exports = { addemployeeProfileController, getCurrentEmployeeProfile}
+const getAllEmployeeProfiles = async (req, res) => {
+  try {
+    const response = await Profile.find().populate("EmployeeId");
+
+    if (!response) {
+      return res
+        .status(422)
+        .json({ status: false, message: "not profile data is available" });
+    }
+
+    return res.status(201).json({
+      status: true,
+      message: "succesfully fetch employee profile",
+      resp: response,
+    });
+  } catch (error) {
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+
+module.exports = { addemployeeProfileController, getCurrentEmployeeProfile, getAllEmployeeProfiles}
