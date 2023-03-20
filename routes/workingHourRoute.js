@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getEmployeeWorkingHourByEmail,
+  getEmployeeWorkingHourByEmail, getAllEmployeeWorkingHour
 } = require("../controllers/workingHourController");
 const {
-  protectedRouteForEmployee,
+  protectedRouteForEmployee, protectedRoute
 } = require("../middlewares/protectedMiddleware");
 
 router.get(
@@ -12,5 +12,7 @@ router.get(
   protectedRouteForEmployee,
   getEmployeeWorkingHourByEmail
 );
+
+router.get("/allemployeeworkinghour", protectedRoute, getAllEmployeeWorkingHour)
 
 module.exports = router;
