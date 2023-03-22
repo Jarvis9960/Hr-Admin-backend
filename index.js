@@ -13,6 +13,7 @@ const path = require("path");
 const socket = require("socket.io");
 const employeeWorkingHour = require("./models/employeeWorkingHourSchema");
 const employee = require("./models/EmployeeSchema");
+const timesheetContractor = require("./routes/timesheetContractorRoute");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(addHoliday);
 app.use(leave);
 app.use(employeeProfile);
 app.use(workingHourRoute);
+app.use(timesheetContractor)
 
 const port = 5000;
 const server = app.listen(port, (req, res) => {
