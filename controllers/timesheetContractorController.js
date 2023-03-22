@@ -100,15 +100,17 @@ const getSortedData = async (req, res) => {
     const savedTimesheet = await TimesheetContractor.find({
       EmployeeName: employeeName,
     }).populate("EmployeeName");
-
-    const existingTimeSheetArr = savedTimesheet[0].Timesheet;
-    const existingEmployeeName = savedTimesheet[0].EmployeeName;
     
-    if (!existingEmployeeName || !existingEmployeeName) {
+     if (!savedTimesheet) {
       return res
         .status(422)
         .json({ status: false, message: "no data is present" });
     }
+    
+
+    const existingTimeSheetArr = savedTimesheet[0].Timesheet;
+    const existingEmployeeName = savedTimesheet[0].EmployeeName;
+    
 
     const filterSortedData = existingTimeSheetArr.filter((curr) => {
       return curr.Date > startDate && curr.Date < endDate;
