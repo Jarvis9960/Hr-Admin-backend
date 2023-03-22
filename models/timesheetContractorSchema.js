@@ -8,7 +8,7 @@ const timeseetContractorSchema = new mongoose.Schema({
   Timesheet: [
     {
       Date: {
-        type: String,
+        type: Date,
       },
       Workinghours: {
         type: String,
