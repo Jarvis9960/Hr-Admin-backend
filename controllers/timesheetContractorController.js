@@ -73,7 +73,7 @@ const getTimesheet = async (req, res) => {
     return res.status(201).json({
       status: true,
       message: "succesfully fetched timesheet data",
-      sortedData,
+      savedTimesheets,
     });
   } catch (error) {
     console.log(error)
