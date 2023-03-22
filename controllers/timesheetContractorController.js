@@ -101,6 +101,8 @@ const getSortedData = async (req, res) => {
       EmployeeName: employeeName,
     }).populate("EmployeeName");
     
+    console.log(savedTimesheet);
+    
      if (!savedTimesheet) {
       return res
         .status(422)
