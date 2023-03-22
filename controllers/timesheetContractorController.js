@@ -103,6 +103,12 @@ const getSortedData = async (req, res) => {
 
     const existingTimeSheetArr = savedTimesheet[0].Timesheet;
     const existingEmployeeName = savedTimesheet[0].EmployeeName;
+    
+    if (!existingEmployeeName || !existingEmployeeName) {
+      return res
+        .status(422)
+        .json({ status: false, message: "no data is present" });
+    }
 
     const filterSortedData = existingTimeSheetArr.filter((curr) => {
       return curr.Date > startDate && curr.Date < endDate;
