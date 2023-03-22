@@ -101,7 +101,6 @@ const getSortedData = async (req, res) => {
       EmployeeName: employeeName,
     }).populate("EmployeeName");
     
-    console.log(savedTimesheet);
     
      if (savedTimesheet.length < 1) {
       return res
@@ -112,9 +111,6 @@ const getSortedData = async (req, res) => {
 
     const existingTimeSheetArr = savedTimesheet[0].Timesheet;
     const existingEmployeeName = savedTimesheet[0].EmployeeName;
-    
-    console.log(startDate);
-    console.log(endDate);
     
 
     const filterSortedData = existingTimeSheetArr.filter((curr) => {
