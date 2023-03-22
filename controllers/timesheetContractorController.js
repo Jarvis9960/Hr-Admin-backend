@@ -103,7 +103,7 @@ const getSortedData = async (req, res) => {
     
     console.log(savedTimesheet);
     
-     if (!savedTimesheet) {
+     if (savedTimesheet.length < 1) {
       return res
         .status(422)
         .json({ status: false, message: "no data is present" });
