@@ -46,4 +46,31 @@ const addTimesheet = async (req, res) => {
   }
 };
 
-module.exports = { addTimesheet };
+const getTimesheet = async (req, res) => {
+  try {
+    const savedTimesheets = await TimesheetContractor.find().populate(
+      "EmployeeName"
+    );
+
+    if (!savedTimesheets) {
+      return res.status(422).json({
+        status: false,
+        message: "There no timesheet present in collection",
+      });
+    }
+
+    return res
+      .status(201)
+      .json({
+        status: true,
+        message: "succesfully fetched timesheet data",
+        savedTimesheets,
+      });
+  } catch (error) {
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
+module.exports = { addTimesheet, getTimesheet };
