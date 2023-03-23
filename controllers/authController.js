@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const admin = require("../models/adminSchema");
 const EmployeeAuth = require("../models/employeeAuth")
+const Contractor = require("../models/contractorAuth");
 const jwt = require("jsonwebtoken");
 const randomString = require("randomstring")
 const dotenv = require("dotenv")
