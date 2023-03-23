@@ -137,4 +137,39 @@ const getSortedData = async (req, res) => {
   }
 };
 
-module.exports = { addTimesheet, getTimesheet, getSortedData };
+const editTimesheetDate = async (req, res) => {
+  try {
+    const { employeeName, TimesheetDateId, customDate, Workinghours } = req.body;
+
+    if (!TimesheetDateId || !employeeName || !customDate || !Workinghours) {
+      return res.status(422).json({
+        status: false,
+        message: "current date id is not given to update",
+      });
+    }
+
+    let StringDateToObject = customDate;
+
+    const dateString = StringDateToObject;
+    const dateObject = moment.tz(dateString, "DD-MM-YYYY", "UTC").toDate();
+
+
+    const updateResponse = await TimesheetContractor.updateOne(
+      { EmployeeName: employeeName, "Timesheet._id": TimesheetDateId },
+      { $set: { "Timesheet.$.Date": dateObject, "Timesheet.$.Workinghours": Workinghours } }
+    );
+
+    if (updateResponse.acknowledged === true) {
+      return res
+        .status(201)
+        .json({ status: true, message: "Date is updated succesfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong" });
+  }
+};
+
+module.exports = { addTimesheet, getTimesheet, getSortedData, editTimesheetDate };
