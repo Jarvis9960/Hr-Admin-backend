@@ -69,4 +69,25 @@ const getEmployeeController = async (req, res) => {
   }
 };
 
-module.exports = { addEmployeeController, getEmployeeController };
+const getEmployeeforContractor = async (req, res) => {
+  try {
+    const response = await Employee.find();
+
+    if (response) {
+      res
+        .status(201)
+        .json({
+          status: true,
+          message: "successfully fetched Employees data",
+          res: response,
+        });
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+}
+
+module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor };
