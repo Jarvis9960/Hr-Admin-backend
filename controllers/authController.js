@@ -475,4 +475,105 @@ const resetPasswordControllerForEmployee = async (req, res) => {
   }
 }
 
-module.exports = { registerController, loginController, forgotPasswordController, resetPasswordController, loginControllerForEmployee, registerControllerForEmployee, forgotPasswordControllerForEmployee, resetPasswordControllerForEmployee };
+const loginControllerForContractor = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res
+        .status(422)
+        .json({ status: false, message: "please provide all required fields" });
+    }
+
+    const emailExists = await Contractor.findOne({ Email: email });
+
+    if (!emailExists) {
+      return res.status(422).json({
+        status: false,
+        message: "contractor is not registered please register first",
+      });
+    } else {
+      const hashPassword = bcrypt.compareSync(password, emailExists.Password);
+
+      if (emailExists.Email === email && hashPassword) {
+        const token = jwt.sign(
+          { contractor_id: emailExists._id },
+          process.env.JWT_SECRET,
+          { expiresIn: "30d" }
+        );
+
+        res.cookie("Token", token, {
+          httpOnly: true,
+          secure: false,
+        });
+
+        return res.status(201).json({
+          status: true,
+          message: "Contractor successfully logged IN",
+          token: token,
+        });
+      } else {
+        return res
+          .status(422)
+          .json({ status: false, message: "Invalid credential" });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ status: false, message: "something went wrong" });
+  }
+};
+
+const registerControllerForContractor = async (req, res) => {
+  try {
+    const { email, password, cPassword } = req.body;
+
+    const emailExists = await Contractor.findOne({ Email: email });
+
+    if (emailExists) {
+      return res
+        .status(422)
+        .json({
+          status: false,
+          message: "contractor already exists please login",
+        });
+    }
+
+    if (!email || !password || !cPassword) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Please field required field" });
+    }
+
+    if (password !== cPassword) {
+      return res.status(422).json({
+        status: false,
+        message: "Password and confirm password are not matching",
+      });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashPassword = bcrypt.hashSync(password, salt);
+
+    const newContractor = new Contractor({
+      Email: email,
+      Password: hashPassword,
+    });
+
+    const response = await newContractor.save();
+
+    if (response) {
+      res.status(200).json({
+        status: true,
+        message: "contractor account successfully created",
+        response,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(422).json({ status: false, message: "Something went wrong" });
+  }
+};
+
+module.exports = { registerController, loginController, forgotPasswordController, resetPasswordController, loginControllerForEmployee, registerControllerForEmployee, forgotPasswordControllerForEmployee, resetPasswordControllerForEmployee, loginControllerForContractor,
+  registerControllerForContractor, };
