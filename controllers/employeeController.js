@@ -2,11 +2,11 @@ const Employee = require("../models/EmployeeSchema");
 
 const addEmployeeController = async (req, res) => {
   try {
-    const { firstName, lastName, email, mobileNo, joinDate, role } = req.body;
+    const { firstName, lastName, email, mobileNo, joinDate, role, contractor } = req.body;
 
     console.log(firstName, lastName, email, mobileNo, joinDate, role);
 
-    if (!firstName || !lastName || !email || !mobileNo || !joinDate || !role) {
+    if (!firstName || !lastName || !email || !mobileNo || !joinDate || !role || !contractor) {
       return res.status(422).json({
         status: false,
         message: "Please filled all the required field",
@@ -30,6 +30,7 @@ const addEmployeeController = async (req, res) => {
       MobileNo: mobileNo,
       JoinDate: joinDate,
       Role: role,
+      Contractor: contractor
     });
 
     const savedResponse = await newEmployee.save();
