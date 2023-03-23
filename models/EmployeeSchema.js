@@ -21,6 +21,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   Contractor: {
+    type: String,
+    required: true,
+  },
 });
 
 const employee = mongoose.model("Employee", employeeSchema);
