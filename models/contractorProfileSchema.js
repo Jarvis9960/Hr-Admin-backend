@@ -9,6 +9,10 @@ const contractorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ContractorEmail: {
+    type: String,
+    required: true
+  },
   JoinDate: {
     type: String,
     required: true,
