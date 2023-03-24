@@ -72,23 +72,43 @@ const getEmployeeController = async (req, res) => {
 
 const getEmployeeforContractor = async (req, res) => {
   try {
-    const response = await Employee.find();
+    const { ContractorName } = req.query;
 
-    if (response) {
-      res
-        .status(201)
+    if (!ContractorName) {
+      return res
+        .status(422)
         .json({
-          status: true,
-          message: "successfully fetched Employees data",
-          res: response,
+          status: false,
+          message: "contractor name is not present in query",
         });
     }
+
+    const savedEmployeeUnderContractor = await Employee.find({
+      Contractor: ContractorName,
+    });
+
+    if (!savedEmployeeUnderContractor) {
+      return res
+        .status(422)
+        .json({
+          status: false,
+          message: "no employees are present under contractor",
+        });
+    }
+
+    return res
+      .status(201)
+      .json({
+        status: true,
+        message: "successfully fetched employee under your team",
+        savedEmployeeUnderContractor,
+      });
   } catch (error) {
     console.log(error);
     res
       .status(422)
       .json({ status: false, message: "something went wrong", err: error });
   }
-}
+};
 
 module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor };
