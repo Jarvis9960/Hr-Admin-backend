@@ -1,5 +1,5 @@
 const express = require("express");
-const { addEmployeeController, getEmployeeController } = require("../controllers/employeeController");
+const { addEmployeeController, getEmployeeController, getEmployeeforContractor } = require("../controllers/employeeController");
 const { protectedRoute } = require("../middlewares/protectedMiddleware");
 const router = express.Router();
 
