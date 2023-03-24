@@ -153,5 +153,39 @@ const contractorProfileController = async (req, res) => {
   }
 };
 
+const getCurrentContractorProfile = async (req, res) => {
+  try {
+    const loginUser = req.user.Email;
+
+    if (!loginUser) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Invalid Employee" });
+    }
+
+    const savedContractorProfile = await ContractorProfile.findOne({
+      ContractorEmail: loginUser,
+    });
+
+    if (!savedContractorProfile) {
+      return res.status(422).json({
+        status: false,
+        message: "contractor profile is not present in database",
+      });
+    }
+
+    return res.status(201).json({
+      status: true,
+      message: "successfull fetch contractor profile data",
+      savedContractorProfile,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
 
 module.exports = { contractorProfileController }
