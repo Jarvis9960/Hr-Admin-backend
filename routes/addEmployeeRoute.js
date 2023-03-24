@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/addemployee", protectedRoute, addEmployeeController);
 router.get("/getallemployees", protectedRoute, getEmployeeController);
-router.get("/getallemployeesforcontrator", getEmployeeController);
+router.get("/getallemployeesforcontrator", getEmployeeforContractor);
 
 module.exports = router;
