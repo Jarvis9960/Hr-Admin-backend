@@ -4,6 +4,7 @@ const contractorProfileController = async (req, res) => {
   try {
     const {
       contractorName,
+      contractorEmail,
       companyName,
       joinDate,
       beneficiaryName,
@@ -28,6 +29,7 @@ const contractorProfileController = async (req, res) => {
 
     if (
       !contractorName ||
+      !contractorEmail ||
       !companyName ||
       !joinDate ||
       !beneficiaryName ||
@@ -111,6 +113,7 @@ const contractorProfileController = async (req, res) => {
 
     const newProfile = new ContractorProfile({
       ContractorName: contractorName,
+      ContractorEmail: contractorEmail,
       CompanyName: companyName,
       JoinDate: joinDate,
       BeneficiaryName: beneficiaryName,
