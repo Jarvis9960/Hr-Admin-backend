@@ -1,5 +1,5 @@
 const express = require("express");
-const { contractorProfileController } = require("../controllers/contractorProfileController");
+const { contractorProfileController, getCurrentContractorProfile } = require("../controllers/contractorProfileController");
 const router = express.Router();
 // const multer = require("multer");
 // const path = require("path");
@@ -40,9 +40,11 @@ const router = express.Router();
 const {
   protectedRouteForEmployee,
   protectedRoute,
+  protectedRouteForContractor,
 } = require("../middlewares/protectedMiddleware");
 
-router.post("/addcontractorprofile", contractorProfileController)
+router.post("/addcontractorprofile", contractorProfileController);
+router.get("/currentcontractorprofile", protectedRouteForContractor, getCurrentContractorProfile);
 
 
 
