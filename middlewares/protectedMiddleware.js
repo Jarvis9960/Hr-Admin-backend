@@ -56,3 +56,31 @@ module.exports.protectedRouteForEmployee = async (req, res, next) => {
     return res.status(422).json({ message: "No token" });
   }
 };
+
+module.exports.protectedRouteForContractor = async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+
+      if (!token) {
+        throw new Error("something went wrong");
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await Contractor.findOne({ _id: decoded.contractor_id });
+
+      next();
+    } catch (error) {
+      return res.status(442).json({ message: "Invalid Auth" });
+    }
+  } else {
+    return res.status(422).json({ message: "No token" });
+  }
+};
+
+
