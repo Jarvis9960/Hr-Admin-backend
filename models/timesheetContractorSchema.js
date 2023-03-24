@@ -10,6 +10,9 @@ const timeseetContractorSchema = new mongoose.Schema({
       Date: {
         type: Date,
       },
+      Task: {
+        type: String,
+      },
       Workinghours: {
         type: String,
       },
