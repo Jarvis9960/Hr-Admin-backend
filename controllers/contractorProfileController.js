@@ -188,4 +188,4 @@ const getCurrentContractorProfile = async (req, res) => {
 };
 
 
-module.exports = { contractorProfileController }
+module.exports = { contractorProfileController, getCurrentContractorProfile }
