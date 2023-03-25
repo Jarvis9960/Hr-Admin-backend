@@ -164,7 +164,7 @@ const getSortedData = async (req, res) => {
   }
 };
 
-const editTimesheetDate = async (req, res) => {
+const editTimesheetDateForAdmin = async (req, res) => {
   try {
     const { employeeName, TimesheetDateId, customDate, Task, Workinghours } =
       req.body;
@@ -216,5 +216,5 @@ module.exports = {
   getTimesheet,
   getTimesheetForContractor,
   getSortedData,
-  editTimesheetDate,
+  editTimesheetDateForAdmin,
 };
