@@ -211,10 +211,55 @@ const editTimesheetDateForAdmin = async (req, res) => {
   }
 };
 
+const editTimesheetDateForContractor = async (req, res) => {
+  try {
+    const { employeeName, TimesheetDateId, Task, Workinghours } =
+      req.body;
+
+    if (
+      !TimesheetDateId ||
+      !Task ||
+      !Workinghours
+    ) {
+      return res.status(422).json({
+        status: false,
+        message: "current date id is not given to update",
+      });
+    }
+
+    // let StringDateToObject = customDate;
+
+    // const dateString = StringDateToObject;
+    // const dateObject = moment.tz(dateString, "DD-MM-YYYY", "UTC").toDate();
+
+    const updateResponse = await TimesheetContractor.updateOne(
+      { "Timesheet._id": TimesheetDateId },
+      {
+        $set: {
+          "Timesheet.$.Task": Task,
+          "Timesheet.$.Workinghours": Workinghours,
+        },
+      }
+    );
+
+    if (updateResponse.acknowledged === true) {
+      return res
+        .status(201)
+        .json({ status: true, message: "Date is updated succesfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong" });
+  }
+};
+
 module.exports = {
   addTimesheet,
   getTimesheet,
   getTimesheetForContractor,
   getSortedData,
   editTimesheetDateForAdmin,
+  editTimesheetDateForContractor
 };
