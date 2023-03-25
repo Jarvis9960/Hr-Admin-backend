@@ -88,11 +88,10 @@ const getTimesheetForContractor = async (req, res) => {
   try {
     const { contractorName } = req.query;
 
-    const savedTimesheets = await TimesheetContractor.find({
-      "EmployeeName.Contractor": contractorName,
-    }).populate("EmployeeName");
+    const savedTimesheets = await TimesheetContractor.find().populate(
+      "EmployeeName"
+    );
     
-
     if (savedTimesheets.length < 1) {
       return res.status(422).json({
         status: false,
