@@ -99,11 +99,15 @@ const getTimesheetForContractor = async (req, res) => {
         message: "There no timesheet present in collection",
       });
     }
+    
+     const filterData = savedTimesheets.filter((curr) => {
+      return curr.EmployeeName.Contractor === contractorName;
+    });
 
     return res.status(201).json({
       status: true,
       message: "succesfully fetched timesheet data",
-      savedTimesheets,
+      filterData,
     });
   } catch (error) {
     console.log(error);
