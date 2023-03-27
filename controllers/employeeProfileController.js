@@ -77,48 +77,48 @@ const addemployeeProfileController = async (req, res) => {
       });
     }
 
-    const panImage = req.files.Panimage[0];
-    const adharImage = req.files.Adharimage[0];
+//     const panImage = req.files.Panimage[0];
+//     const adharImage = req.files.Adharimage[0];
 
-    if (!panImage) {
-      return res
-        .status(422)
-        .json({ status: false, message: "Pan image is not uploaded" });
-    }
+//     if (!panImage) {
+//       return res
+//         .status(422)
+//         .json({ status: false, message: "Pan image is not uploaded" });
+//     }
 
-    const panimageNameArr = panImage.originalname.split(".");
-    const panOriginalName = panimageNameArr[0];
-    const adharImageNameArr = adharImage.originalname.split(".");
-    const adharOriginalName = adharImageNameArr[0];
+//     const panimageNameArr = panImage.originalname.split(".");
+//     const panOriginalName = panimageNameArr[0];
+//     const adharImageNameArr = adharImage.originalname.split(".");
+//     const adharOriginalName = adharImageNameArr[0];
 
-    const Panresp = cloudinary.uploader.upload(panImage.path, {
-      public_id: panOriginalName,
-    });
+//     const Panresp = cloudinary.uploader.upload(panImage.path, {
+//       public_id: panOriginalName,
+//     });
 
-    Panresp.then((data) => {
-      console.log(data.secure_url);
-    }).catch((err) => {
-      return res
-        .status(422)
-        .json({ status: false, message: "image uploads failed" });
-    });
+//     Panresp.then((data) => {
+//       console.log(data.secure_url);
+//     }).catch((err) => {
+//       return res
+//         .status(422)
+//         .json({ status: false, message: "image uploads failed" });
+//     });
 
-    const Adharresp = cloudinary.uploader.upload(adharImage.path, {
-      public_id: adharOriginalName,
-    });
+//     const Adharresp = cloudinary.uploader.upload(adharImage.path, {
+//       public_id: adharOriginalName,
+//     });
 
-    Adharresp.then((data) => {
-      console.log(data.secure_url);
-    }).catch((err) => {
-      return res
-        .status(422)
-        .json({ status: false, message: "image uploads failed" });
-    });
+//     Adharresp.then((data) => {
+//       console.log(data.secure_url);
+//     }).catch((err) => {
+//       return res
+//         .status(422)
+//         .json({ status: false, message: "image uploads failed" });
+//     });
 
-    let panSavedUrl = await cloudinary.url(panOriginalName, { secure: true });
-    let adharSavedUrl = await cloudinary.url(adharOriginalName, {
-      secure: true,
-    });
+//     let panSavedUrl = await cloudinary.url(panOriginalName, { secure: true });
+//     let adharSavedUrl = await cloudinary.url(adharOriginalName, {
+//       secure: true,
+//     });
 
     const newProfile = new Profile({
       EmployeeId: EmployeeId,
@@ -138,8 +138,8 @@ const addemployeeProfileController = async (req, res) => {
       BankAccNo: bankAccNo,
       IFSCcode: isfcCode,
       PanNo: panNo,
-      PanImage: panSavedUrl,
-      AdharImage: adharSavedUrl,
+//       PanImage: panSavedUrl,
+//       AdharImage: adharSavedUrl,
     });
 
     const savedProfile = await newProfile.save();
