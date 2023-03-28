@@ -1,4 +1,5 @@
 const Employee = require("../models/EmployeeSchema");
+const Vendor = require("../models/vendorSchema");
 
 const addEmployeeController = async (req, res) => {
   try {
