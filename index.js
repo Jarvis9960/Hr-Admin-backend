@@ -20,6 +20,7 @@ const invoiceRoute = require("./routes/invoiceRoute");
 const vendorRoute = require("./routes/addVendorRoute");
 const vendorProfile = require("./routes/vendorProfileRoute");
 const vendorAuth = require("./routes/vendorAuthRoute");
+const timesheetVendor = require("./routes/timesheetVendorRoute")
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use(invoiceRoute);
 app.use(vendorRoute);
 app.use(vendorProfile);
 app.use(vendorAuth);
+app.use(timesheetVendor);
 
 const port = 5000;
 const server = app.listen(port, (req, res) => {
