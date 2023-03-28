@@ -124,6 +124,7 @@ const vendorProfileController = async (req, res) => {
     const newProfile = new VendorProfile({
       Vendor: vendorId,
       CompanyName: companyName,
+      GST: gst,
       JoinDate: joinDate,
       BeneficiaryName: beneficiaryName,
       Role: role,
