@@ -67,8 +67,8 @@ const vendorProfileController = async (req, res) => {
       });
     }
 
-    const panNoExist = await ContractorProfile.findOne({ PanNo: panNo });
-    const idNoExist = await ContractorProfile.findOne({ IdNo: idNo });
+    const panNoExist = await VendorProfile.findOne({ PanNo: panNo });
+    const idNoExist = await VendorProfile.findOne({ IdNo: idNo });
 
     if (panNoExist || idNoExist) {
       return res.status(422).json({
