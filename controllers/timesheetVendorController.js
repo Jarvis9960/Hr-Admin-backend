@@ -108,7 +108,7 @@ const getSortedDataForVendor = async (req, res) => {
 
     const savedTimesheet = await TimesheetVendor.find({
       Vendor: vendorId,
-    }).populate("EmployeeName");
+    }).populate("Vendor");
 
     const existingTimeSheetArr = savedTimesheet[0].Timesheet;
     const existingEmployeeName = savedTimesheet[0].Vendor;
