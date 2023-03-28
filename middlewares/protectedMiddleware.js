@@ -103,6 +103,7 @@ module.exports.protectedRouteForVendor = async (req, res, next) => {
 
       next();
     } catch (error) {
+      console.log(error);
       return res.status(442).json({ message: "Invalid Auth" });
     }
   } else {
