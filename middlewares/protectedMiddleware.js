@@ -1,6 +1,7 @@
 const Admin = require("../models/adminSchema");
 const employeeAuth = require("../models/employeeAuth");
 const Contractor = require("../models/contractorAuth");
+const VendorAuth = require("../models/vendorAuthSchema");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const path = require("path");
