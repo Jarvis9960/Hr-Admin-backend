@@ -70,6 +70,71 @@ const getEmployeeController = async (req, res) => {
   }
 };
 
+const addVendor = async (req, res) => {
+  try {
+    const { vendorName, vendorEmail } = req.body;
+
+    if (!vendorName || !vendorEmail) {
+      return res.status(422).json({
+        status: false,
+        message: "please filled required fields properly",
+      });
+    }
+
+    const existingVendorEmail = await Vendor.findOne({
+      VendorEmail: vendorEmail,
+    });
+
+    if (existingVendorEmail) {
+      return res.status(422).json({
+        status: false,
+        message: "vendor email is already register to company",
+      });
+    }
+
+    const newVendor = new Vendor({
+      VendorName: vendorName,
+      VendorEmail: vendorEmail,
+    });
+
+    const savedVendor = await newVendor.save();
+
+    if (savedVendor) {
+      return res
+        .status(201)
+        .json({ status: true, message: "succesfully added new Vendor" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong" });
+  }
+};
+
+const getVendorForAdmin = async (req, res) => {
+  try {
+    const savedVendors = await Vendor.find();
+
+    if (savedVendors > 1) {
+      return res
+        .status(422)
+        .json({ status: false, message: "no vendors are present in company" });
+    }
+
+    return res.status(201).json({
+      status: true,
+      message: "succesfully fetched vendors data",
+      res: savedVendors,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong" });
+  }
+};
+
 const getEmployeeforContractor = async (req, res) => {
   try {
     const { ContractorName } = req.query;
