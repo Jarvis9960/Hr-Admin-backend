@@ -57,9 +57,22 @@ const addInvoiceForEmployee = async (req, res) => {
     const startDate = moment.tz(from, "DD-MM-YYYY", "UTC").toDate();
     const endDate = moment.tz(to, "DD-MM-YYYY", "UTC").toDate();
     const InvoiceDate = moment.tz(invoiceDate, "DD-MM-YYYY", "UTC").toDate();
-
+    const existingDate = await Invoice.findOne({
+      DateFrom: startDate,
+      DateTo: endDate,
+    });
     const existingInvoiceNo = await Invoice.findOne({ InvoiceNo: invoiceNo });
     const existingServiceNo = await Invoice.findOne({ ServiceNo: serviceNo });
+    
+    
+    if (existingDate) {
+      return res
+        .status(422)
+        .json({
+          status: false,
+          message: "invoice is already filled for given dates",
+        });
+    }
 
     if (existingInvoiceNo || existingServiceNo) {
       return res.status(422).json({
@@ -105,8 +118,8 @@ const addInvoiceForEmployee = async (req, res) => {
 };
 
 const getInvoiceForEmployee = async (req, res) => {
-  try {
-    const { employeeId } = req.query;
+ try {
+    const { startDate, endDate, employeeId } = req.query;
 
     if (!employeeId) {
       return res.status(422).json({
@@ -114,6 +127,16 @@ const getInvoiceForEmployee = async (req, res) => {
         message: "unable to fetch Invoice. Employee ID is not present",
       });
     }
+
+    if (!startDate || !endDate) {
+      return res.status(422).json({
+        status: false,
+        message: "unable to fetch Invoice. startDate or EndDate is not present",
+      });
+    }
+
+    const from = moment.tz(startDate, "DD-MM-YYYY", "UTC").toDate();
+    const to = moment.tz(endDate, "DD-MM-YYYY", "UTC").toDate();
 
     const existingEmployee = await EmployeeProfile.findOne({
       EmployeeId: employeeId,
@@ -127,7 +150,18 @@ const getInvoiceForEmployee = async (req, res) => {
 
     const existingEmployeePan = existingEmployee.PanNo;
 
-    const savedInvoice = await Invoice.findOne({ Pan: existingEmployeePan });
+    const savedInvoice = await Invoice.findOne({
+      DateFrom: from,
+      DateTo: to,
+      Pan: existingEmployeePan,
+    });
+
+    if (!savedInvoice) {
+      return res.status(422).json({
+        status: false,
+        message: "no invoices are present for given date for current employee",
+      });
+    }
 
     if (savedInvoice) {
       return res.status(201).json({
