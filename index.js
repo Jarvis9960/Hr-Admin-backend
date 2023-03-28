@@ -19,6 +19,7 @@ const contractorProfile = require("./routes/contractorProfileRoute")
 const invoiceRoute = require("./routes/invoiceRoute");
 const vendorRoute = require("./routes/addVendorRoute");
 const vendorProfile = require("./routes/vendorProfileRoute");
+const vendorAuth = require("./routes/vendorAuthRoute");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(contractorProfile);
 app.use(invoiceRoute);
 app.use(vendorRoute);
 app.use(vendorProfile);
+app.use(vendorAuth);
 
 const port = 5000;
 const server = app.listen(port, (req, res) => {
