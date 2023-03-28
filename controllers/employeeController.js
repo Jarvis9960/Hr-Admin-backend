@@ -176,4 +176,4 @@ const getEmployeeforContractor = async (req, res) => {
   }
 };
 
-module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor };
+module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor, addVendor, getVendorForAdmin };
