@@ -611,7 +611,7 @@ const loginControllerForVendor = async (req, res) => {
 
         return res.status(201).json({
           status: true,
-          message: "Admin successfully logged IN",
+          message: "vendor successfully logged IN",
           token: token,
         });
       } else {
@@ -664,7 +664,7 @@ const registerControllerForVendor = async (req, res) => {
     if (response) {
       res.status(200).json({
         status: true,
-        message: "Admin successfully created",
+        message: "vendor successfully created",
         response,
       });
     }
