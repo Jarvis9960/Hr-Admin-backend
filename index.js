@@ -17,6 +17,8 @@ const timesheetContractor = require("./routes/timesheetContractorRoute");
 const contractorAuth = require("./routes/contractorAuthRoute");
 const contractorProfile = require("./routes/contractorProfileRoute")
 const invoiceRoute = require("./routes/invoiceRoute");
+const vendorRoute = require("./routes/addVendorRoute");
+const vendorProfile = require("./routes/vendorProfileRoute");
 
 const app = express();
 
@@ -35,6 +37,8 @@ app.use(timesheetContractor);
 app.use(contractorAuth);
 app.use(contractorProfile);
 app.use(invoiceRoute);
+app.use(vendorRoute);
+app.use(vendorProfile);
 
 const port = 5000;
 const server = app.listen(port, (req, res) => {
