@@ -1,5 +1,6 @@
 const Employee = require("../models/EmployeeSchema");
 const Vendor = require("../models/vendorSchema");
+const ContractorProfile = require("../models/contractorProfileSchema");
 
 const addEmployeeController = async (req, res) => {
   try {
@@ -177,4 +178,29 @@ const getEmployeeforContractor = async (req, res) => {
   }
 };
 
-module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor, addVendor, getVendorForAdmin };
+const getAllContractorProfile = async (req, res) => {
+  try {
+    const savedContractorProfile = await ContractorProfile.find();
+
+    if (savedContractorProfile.length < 1) {
+      return res
+        .status(422)
+        .json({ status: false, message: "no profile is present in database" });
+    }
+
+    return res
+      .status(201)
+      .json({
+        status: true,
+        message: "successfully fetched contractor profile",
+        savedContractorProfile,
+      });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
+module.exports = { addEmployeeController, getEmployeeController, getEmployeeforContractor, addVendor, getVendorForAdmin, getAllContractorProfile };
