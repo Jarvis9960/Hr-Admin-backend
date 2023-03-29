@@ -1,6 +1,7 @@
 const Invoice = require("../models/invoiceSchema");
 const moment = require("moment-timezone");
 const EmployeeProfile = require("../models/profileSchema");
+const ContractorProfile = require("../models/contractorProfileSchema");
 
 const addInvoiceForEmployee = async (req, res) => {
   try {
