@@ -178,4 +178,45 @@ const getInvoiceForEmployee = async (req, res) => {
   }
 };
 
-module.exports = { addInvoiceForEmployee, getInvoiceForEmployee };
+const getInvoiceOfContractor = async (req, res) => {
+  try {
+    const { startDate, endDate, panNo } = req.query;
+
+    if (!startDate || !endDate || !panNo) {
+      return res
+        .status(422)
+        .json({ status: false, message: "please give all required field" });
+    }
+
+    const from = moment.tz(startDate, "DD-MM-YYYY", "UTC").toDate();
+    const to = moment.tz(endDate, "DD-MM-YYYY", "UTC").toDate();
+
+    const savedInvoice = await Invoice.findOne({
+      DateFrom: from,
+      DateTo: to,
+      Pan: panNo,
+    });
+
+    if (!savedInvoice) {
+      return res.status(422).json({
+        status: false,
+        message: "no invoices are present for given date for current employee",
+      });
+    }
+
+    if (savedInvoice) {
+      return res.status(201).json({
+        status: true,
+        message: "successfully fetched invoice for current employee",
+        savedInvoice,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(501)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
+module.exports = { addInvoiceForEmployee, getInvoiceForEmployee, getInvoiceOfContractor };
