@@ -180,14 +180,22 @@ const getInvoiceForEmployee = async (req, res) => {
 
 const getInvoiceOfContractor = async (req, res) => {
   try {
-    const { startDate, endDate, panNo } = req.query;
+    const { startDate, endDate, contractorId } = req.query;
 
-    if (!startDate || !endDate || !panNo) {
+    if (!startDate || !endDate || !contractorId) {
       return res
         .status(422)
         .json({ status: false, message: "please give all required field" });
     }
 
+    const existingContractor = await ContractorProfile.findOne({_id: contractorId});
+
+    if(!existingContractor) {
+      return res.status(422).json({status: false, message: "there no contractor present of such id"});
+    }
+
+    const panNo = existingContractor.PanNo;
+    
     const from = moment.tz(startDate, "DD-MM-YYYY", "UTC").toDate();
     const to = moment.tz(endDate, "DD-MM-YYYY", "UTC").toDate();
 
