@@ -19,6 +19,10 @@ const timeseetContractorSchema = new mongoose.Schema({
       Workinghours: {
         type: String,
       },
+       Approve: {
+        type: Boolean,
+        default: false
+      }
     },
   ],
 });
