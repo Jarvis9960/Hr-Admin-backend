@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { addTimesheet, getTimesheet, getSortedData, editTimesheetDateForAdmin, getTimesheetForContractor, editTimesheetDateForContractor } = require("../controllers/timesheetContractorController");
+const { addTimesheet, getTimesheet, getSortedData, editTimesheetDateForAdmin, getTimesheetForContractor, editTimesheetDateForContractor, approveTimesheetFromAdmin } = require("../controllers/timesheetContractorController");
 
 router.post("/addtimesheet", addTimesheet);
 router.get("/gettimesheet", getTimesheet);
