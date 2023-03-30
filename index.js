@@ -74,6 +74,10 @@ io.on("connection", (socket) => {
     console.log(timesheetInfo);
     timesheet = timesheetInfo;
   });
+  
+  socket.on("invoice-filled", (data) => {
+    socket.emit("invoice-filled-notified", data);
+  });
 
   socket.on("disconnect", (socket) => {
     let called = false;
