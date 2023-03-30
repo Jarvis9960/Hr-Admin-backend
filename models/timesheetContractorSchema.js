@@ -10,9 +10,6 @@ const timeseetContractorSchema = new mongoose.Schema({
       Date: {
         type: Date,
       },
-      Day: {
-        type: String
-      },
       Task: {
         type: String,
       },
