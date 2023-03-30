@@ -55,11 +55,9 @@ const contractorSchema = new mongoose.Schema({
   },
   Religion: {
     type: String,
-    required: true,
   },
   MartialStatus: {
     type: String,
-    required: true,
   },
   EmergencyContactName: {
     type: String,
