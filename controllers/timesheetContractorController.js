@@ -12,6 +12,7 @@ const addTimesheet = async (req, res) => {
 
     let newObject = {
       Date: dateObject,
+      Day: timeSheet.Day,
       Task: timeSheet.Task,
       Workinghours: timeSheet.Workinghours,
     };
