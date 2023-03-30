@@ -216,46 +216,85 @@ const editTimesheetDateForAdmin = async (req, res) => {
 };
 
 const editTimesheetDateForContractor = async (req, res) => {
-  try {
-    const { employeeName, TimesheetDateId, Task, Workinghours } =
-      req.body;
+    try {
+    const { employeeName, TimesheetDateId, Task, Workinghours } = req.body;
 
-    if (
-      !TimesheetDateId ||
-      !Task ||
-      !Workinghours
-    ) {
+    if (!TimesheetDateId || !Task || !Workinghours) {
       return res.status(422).json({
         status: false,
         message: "current date id is not given to update",
       });
     }
 
-    // let StringDateToObject = customDate;
+    const existingTimesheet = await TimesheetContractor.findOne({
+      "Timesheet._id": TimesheetDateId,
+    });
 
-    // const dateString = StringDateToObject;
-    // const dateObject = moment.tz(dateString, "DD-MM-YYYY", "UTC").toDate();
-
-    const updateResponse = await TimesheetContractor.updateOne(
-      { "Timesheet._id": TimesheetDateId },
-      {
-        $set: {
-          "Timesheet.$.Task": Task,
-          "Timesheet.$.Workinghours": Workinghours,
-        },
-      }
-    );
-
-    if (updateResponse.acknowledged === true) {
+    if (!existingTimesheet) {
       return res
-        .status(201)
-        .json({ status: true, message: "Date is updated succesfully" });
+        .status(422)
+        .json({ status: false, message: "No Timeheet present with given id" });
     }
+
+    const timesheet = existingTimesheet.Timesheet;
+
+    timesheet.map(async (curr) => {
+      if (curr._id == TimesheetDateId) {
+        if (curr.Approve) {
+          return res.status(422).json({
+            status: false,
+            message: "Admin has approved timesheet and cannot be editable",
+          });
+        } else {
+          const updateResponse = await TimesheetContractor.updateOne(
+            { "Timesheet._id": TimesheetDateId },
+            {
+              $set: {
+                "Timesheet.$.Task": Task,
+                "Timesheet.$.Workinghours": Workinghours,
+              },
+            }
+          );
+
+          if (updateResponse.acknowledged === true) {
+            return res
+              .status(201)
+              .json({ status: true, message: "Date is updated succesfully" });
+          }
+        }
+      }
+    });
   } catch (error) {
     console.log(error);
     return res
       .status(422)
       .json({ status: false, message: "something went wrong" });
+  }
+};
+
+const approveTimesheetFromAdmin = async (req, res) => {
+  try {
+    const { TimesheetId } = req.body;
+
+    const updateApprove = await TimesheetContractor.updateOne(
+      { "Timesheet._id": TimesheetId },
+      {
+        $set: {
+          "Timesheet.$.Approve": true,
+        },
+      }
+    );
+
+    if (updateApprove.acknowledged === true) {
+      return res
+        .status(201)
+        .json({ status: true, message: "Approve successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
   }
 };
 
@@ -265,5 +304,6 @@ module.exports = {
   getTimesheetForContractor,
   getSortedData,
   editTimesheetDateForAdmin,
-  editTimesheetDateForContractor
+  editTimesheetDateForContractor,
+  approveTimesheetFromAdmin
 };
