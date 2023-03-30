@@ -8,6 +8,7 @@ router.get("/getsortedtimesheet", getSortedData);
 router.patch("/edittimesheetdateforadmin", editTimesheetDateForAdmin);
 router.get("/gettimesheetforcontractor", getTimesheetForContractor);
 router.patch("/edittimesheetdateforcontractor", editTimesheetDateForContractor);
+router.patch("/approvetimesheet", approveTimesheetFromAdmin);
 
 
 module.exports = router;
