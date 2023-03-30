@@ -76,6 +76,7 @@ io.on("connection", (socket) => {
   });
   
   socket.on("invoice-filled", (data) => {
+    console.log(data);
     socket.emit("invoice-filled-notified", data);
   });
 
