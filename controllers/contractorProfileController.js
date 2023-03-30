@@ -41,8 +41,6 @@ const contractorProfileController = async (req, res) => {
       !reportTo ||
       !idNo ||
       !nationality ||
-      !religion ||
-      !martialStatus ||
       !emergencyContactName ||
       !emergencyContactRelation ||
       !emergencyContactNumber ||
