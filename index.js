@@ -78,6 +78,9 @@ io.on("connection", (socket) => {
   
   socket.on("invoice-filled", (data) => {
        invoiceData = data;
+     setTimeout(() => {
+      invoiceData = "";
+    }, 5000);
   });
 
   socket.emit("invoice-filled-notified", invoiceData);
