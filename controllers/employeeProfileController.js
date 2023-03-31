@@ -218,8 +218,47 @@ const getAllEmployeeProfiles = async (req, res) => {
   }
 };
 
+const getEmployeeProfilebyId = async (req, res) => {
+  try {
+    const { profileId } = req.query;
+
+    if (!profileId) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Profile ID is not givent" });
+    }
+
+    const savedEmployeeProfile = await Profile.findOne({
+      _id: profileId,
+    }).populate("EmployeeId");
+
+    if (!savedEmployeeProfile) {
+      return res
+        .status(422)
+        .json({
+          status: false,
+          message: "No profile is present with given Id",
+        });
+    }
+
+    return res
+      .status(201)
+      .json({
+        status: true,
+        message: "successfully fetched Employee Profile",
+        savedEmployeeProfile,
+      });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
 module.exports = {
   addemployeeProfileController,
   getCurrentEmployeeProfile,
   getAllEmployeeProfiles,
+  getEmployeeProfilebyId
 };
