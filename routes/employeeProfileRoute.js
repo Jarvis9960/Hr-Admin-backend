@@ -44,6 +44,7 @@ const {
   addemployeeProfileController,
   getCurrentEmployeeProfile,
   getAllEmployeeProfiles,
+  getEmployeeProfilebyId,
 } = require("../controllers/employeeProfileController");
 
 router.post(
@@ -55,5 +56,6 @@ router.post(
 router.get("/getprofile", protectedRouteForEmployee, getCurrentEmployeeProfile);
 
 router.get("/getallemployeeprofile", protectedRoute, getAllEmployeeProfiles);
+router.get("/getemployeeprofilebyid", getEmployeeProfilebyId);
 
 module.exports = router;
