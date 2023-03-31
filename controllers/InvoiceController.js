@@ -23,6 +23,25 @@ const addInvoiceForEmployee = async (req, res) => {
       AccountNumber,
       IFSC,
     } = req.body;
+    
+    console.log(
+      from,
+      to,
+      invoiceNo,
+      serviceNo,
+      invoiceDate,
+      supplier,
+      name,
+      address,
+      aadhar,
+      pan,
+      phone,
+      table,
+      amountInWord,
+      Bankname,
+      AccountNumber,
+      IFSC
+    );
 
     if (
       !from ||
