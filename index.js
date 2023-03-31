@@ -66,8 +66,6 @@ const io = socket(server, {
 });
 
 var timesheet;
-var invoiceData;
-console.log(invoiceData);
 
 io.on("connection", (socket) => {
   console.log("connection is successful to socket");
@@ -78,13 +76,8 @@ io.on("connection", (socket) => {
   });
   
   socket.on("invoice-filled", (data) => {
-       invoiceData = data;
-     setTimeout(() => {
-      invoiceData = "";
-    }, 5000);
+    io.emit("invoice-filled-notified", data);
   });
-
-  socket.emit("invoice-filled-notified", invoiceData);
 
   socket.on("disconnect", (socket) => {
     let called = false;
