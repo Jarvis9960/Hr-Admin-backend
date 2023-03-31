@@ -67,6 +67,7 @@ const io = socket(server, {
 
 var timesheet;
 var invoiceData;
+console.log(invoiceData);
 
 io.on("connection", (socket) => {
   console.log("connection is successful to socket");
