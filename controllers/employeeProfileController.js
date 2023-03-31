@@ -229,7 +229,7 @@ const getEmployeeProfilebyId = async (req, res) => {
     }
 
     const savedEmployeeProfile = await Profile.findOne({
-      _id: profileId,
+      EmployeeId: profileId,
     }).populate("EmployeeId");
 
     if (!savedEmployeeProfile) {
