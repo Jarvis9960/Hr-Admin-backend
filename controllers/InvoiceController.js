@@ -275,4 +275,4 @@ const approveInvoiceByAdmin = async (req, res) => {
   }
 };
 
-module.exports = { addInvoiceForEmployee, getInvoiceForEmployee, getInvoiceOfContractor };
+module.exports = { addInvoiceForEmployee, getInvoiceForEmployee, getInvoiceOfContractor, approveInvoiceByAdmin, };
