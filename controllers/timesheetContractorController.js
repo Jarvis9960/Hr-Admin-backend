@@ -4,6 +4,13 @@ const moment = require("moment-timezone");
 const addTimesheet = async (req, res) => {
   try {
     const { employeeName, timeSheet } = req.body;
+    
+    if (!employeeName || !timeSheet) {
+      return res.status(422).json({
+        status: false,
+        message: "Please provide all fields correctly",
+      });
+    }
 
     let StringDateToObject = timeSheet.Date;
 
