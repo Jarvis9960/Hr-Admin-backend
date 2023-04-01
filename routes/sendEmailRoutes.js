@@ -18,12 +18,12 @@ const storage = multer.diskStorage({
 });
 
 function checkFileType(file, cb) {
-  const filetypes = /xls|xlsx/;
+  const filetypes = /pdf/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   if (extname) {
     return cb(null, true);
   } else {
-    cb("Excel only"); // custom this message to fit your needs
+    cb("PDF only"); // custom this message to fit your needs
   }
 }
 
@@ -34,7 +34,7 @@ const upload = multer({
   },
 });
 
-router.post("/sendtimesheet", upload.single("Excel"), sendTimesheetExcelController)
+router.post("/sendtimesheet", upload.single("PDF"), sendTimesheetExcelController)
 
 
 module.exports = router;
