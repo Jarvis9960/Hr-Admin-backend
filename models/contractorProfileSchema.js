@@ -87,6 +87,12 @@ const contractorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   PanImage: {
+    type: String,
+  },
+  AdharImage: {
+    type: String,
+  },
 });
 
 const ContractorProfile = mongoose.model("ContractorProfile", contractorSchema);
