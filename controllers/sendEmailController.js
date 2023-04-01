@@ -18,7 +18,7 @@ const sendTimesheetExcelController = async (req, res) => {
       secure: true, // true for 465, false for other ports
       auth: {
         user: "jarvis9960@gmail.com",
-        pass: "msauwpetmsubwflq",
+        pass: "obmpwekbfesnohpj",
       },
     });
 
