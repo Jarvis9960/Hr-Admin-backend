@@ -78,6 +78,10 @@ io.on("connection", (socket) => {
   socket.on("invoice-filled", (data) => {
     io.emit("invoice-filled-notified", data);
   });
+  
+  socket.on("timesheet-edited", (data) => {
+    io.emit("timesheet-edited-notified", data);
+  })
 
   socket.on("disconnect", (socket) => {
     let called = false;
