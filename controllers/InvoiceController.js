@@ -247,4 +247,32 @@ const getInvoiceOfContractor = async (req, res) => {
   }
 };
 
+const approveInvoiceByAdmin = async (req, res) => {
+  try {
+    const { invoiceId } = req.body;
+
+    if (!invoiceId) {
+      return res
+        .status(422)
+        .json({ status: false, message: "invoice id is not given to approve" });
+    }
+
+    const approveInvoice = await Invoice.updateOne(
+      { _id: invoiceId },
+      { $set: { Approve: true } }
+    );
+
+    if (approveInvoice.acknowledged === true) {
+      return res
+        .status(201)
+        .json({ status: true, message: "Approve successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
 module.exports = { addInvoiceForEmployee, getInvoiceForEmployee, getInvoiceOfContractor };
