@@ -89,6 +89,12 @@ const vendorProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   PanImage: {
+    type: String,
+  },
+  AdharImage: {
+    type: String,
+  },
 });
 
 const VendorProfile = mongoose.model("VendorProfile", vendorProfileSchema);
