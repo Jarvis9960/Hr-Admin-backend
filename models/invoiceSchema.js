@@ -77,6 +77,10 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   Approve: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 
