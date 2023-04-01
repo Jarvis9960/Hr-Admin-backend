@@ -1,12 +1,6 @@
 const Profile = require("../models/profileSchema");
 const Employee = require("../models/EmployeeSchema");
-const cloudinary = require("cloudinary").v2;
 
-cloudinary.config({
-  cloud_name: "dmq6xw2ux",
-  api_key: "739671846821257",
-  api_secret: "udhZGXBeBbM4-PCWhwO77_0G0Ww",
-});
 
 const addemployeeProfileController = async (req, res) => {
   try {
@@ -76,49 +70,18 @@ const addemployeeProfileController = async (req, res) => {
           "pan number or adhar number you have register are assiocate with another employee",
       });
     }
+    
+    const panImage = req.files.Panimage[0];
+    const adharImage = req.files.Adharimage[0];
 
-//     const panImage = req.files.Panimage[0];
-//     const adharImage = req.files.Adharimage[0];
+    if (!panImage || !adharImage) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Pan or adhar image is not uploaded" });
+    }
 
-//     if (!panImage) {
-//       return res
-//         .status(422)
-//         .json({ status: false, message: "Pan image is not uploaded" });
-//     }
-
-//     const panimageNameArr = panImage.originalname.split(".");
-//     const panOriginalName = panimageNameArr[0];
-//     const adharImageNameArr = adharImage.originalname.split(".");
-//     const adharOriginalName = adharImageNameArr[0];
-
-//     const Panresp = cloudinary.uploader.upload(panImage.path, {
-//       public_id: panOriginalName,
-//     });
-
-//     Panresp.then((data) => {
-//       console.log(data.secure_url);
-//     }).catch((err) => {
-//       return res
-//         .status(422)
-//         .json({ status: false, message: "image uploads failed" });
-//     });
-
-//     const Adharresp = cloudinary.uploader.upload(adharImage.path, {
-//       public_id: adharOriginalName,
-//     });
-
-//     Adharresp.then((data) => {
-//       console.log(data.secure_url);
-//     }).catch((err) => {
-//       return res
-//         .status(422)
-//         .json({ status: false, message: "image uploads failed" });
-//     });
-
-//     let panSavedUrl = await cloudinary.url(panOriginalName, { secure: true });
-//     let adharSavedUrl = await cloudinary.url(adharOriginalName, {
-//       secure: true,
-//     });
+    const panImageUrl = panImage.path;
+    const adharImageUrl = adharImage.path;
 
     const newProfile = new Profile({
       EmployeeId: EmployeeId,
@@ -138,8 +101,8 @@ const addemployeeProfileController = async (req, res) => {
       BankAccNo: bankAccNo,
       IFSCcode: isfcCode,
       PanNo: panNo,
-//       PanImage: panSavedUrl,
-//       AdharImage: adharSavedUrl,
+      PanImage: panImageUrl,
+      AdharImage: adharImageUrl,
     });
 
     const savedProfile = await newProfile.save();
