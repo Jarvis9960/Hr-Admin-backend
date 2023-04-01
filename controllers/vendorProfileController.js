@@ -78,48 +78,17 @@ const vendorProfileController = async (req, res) => {
       });
     }
 
-    // const panImage = req.files.Panimage[0];
-    // const adharImage = req.files.Adharimage[0];
+    const panImage = req.files.Panimage[0];
+    const adharImage = req.files.Adharimage[0];
 
-    // if (!panImage) {
-    //   return res
-    //     .status(422)
-    //     .json({ status: false, message: "Pan image is not uploaded" });
-    // }
+    if (!panImage || !adharImage) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Pan or adhar image is not uploaded" });
+    }
 
-    // const panimageNameArr = panImage.originalname.split(".");
-    // const panOriginalName = panimageNameArr[0];
-    // const adharImageNameArr = adharImage.originalname.split(".");
-    // const adharOriginalName = adharImageNameArr[0];
-
-    // const Panresp = cloudinary.uploader.upload(panImage.path, {
-    //   public_id: panOriginalName,
-    // });
-
-    // Panresp.then((data) => {
-    //   console.log(data.secure_url);
-    // }).catch((err) => {
-    //   return res
-    //     .status(422)
-    //     .json({ status: false, message: "image uploads failed" });
-    // });
-
-    // const Adharresp = cloudinary.uploader.upload(adharImage.path, {
-    //   public_id: adharOriginalName,
-    // });
-
-    // Adharresp.then((data) => {
-    //   console.log(data.secure_url);
-    // }).catch((err) => {
-    //   return res
-    //     .status(422)
-    //     .json({ status: false, message: "image uploads failed" });
-    // });
-
-    // let panSavedUrl = await cloudinary.url(panOriginalName, { secure: true });
-    // let adharSavedUrl = await cloudinary.url(adharOriginalName, {
-    //   secure: true,
-    // });
+    const panImageUrl = panImage.path;
+    const adharImageUrl = adharImage.path;
 
     const newProfile = new VendorProfile({
       Vendor: vendorId,
@@ -144,6 +113,8 @@ const vendorProfileController = async (req, res) => {
       BankAccNo: bankAccNo,
       IFSCcode: isfcCode,
       PanNo: panNo,
+      PanImage: panImageUrl,
+      AdharImage: adharImageUrl,
     });
 
     const savedProfile = await newProfile.save();
