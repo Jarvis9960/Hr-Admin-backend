@@ -14,6 +14,7 @@ const socket = require("socket.io");
 const employeeWorkingHour = require("./models/employeeWorkingHourSchema");
 const employee = require("./models/EmployeeSchema");
 const timesheetContractor = require("./routes/timesheetContractorRoute");
+const sendEmails = require("./routes/sendEmailRoutes");
 const contractorAuth = require("./routes/contractorAuthRoute");
 const contractorProfile = require("./routes/contractorProfileRoute")
 const invoiceRoute = require("./routes/invoiceRoute");
@@ -36,6 +37,7 @@ app.use(leave);
 app.use(employeeProfile);
 app.use(workingHourRoute);
 app.use(timesheetContractor);
+app.use(sendEmails);
 app.use(contractorAuth);
 app.use(contractorProfile);
 app.use(invoiceRoute);
