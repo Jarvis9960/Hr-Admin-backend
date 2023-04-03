@@ -151,7 +151,7 @@ const getSortedData = async (req, res) => {
     }
 
     const filterSortedData = existingTimeSheetArr.filter((curr) => {
-      return curr.Date > startDate && curr.Date < endDate;
+      return curr.Date >= startDate && curr.Date <= endDate;
     });
 
     const newObj = {
@@ -163,7 +163,7 @@ const getSortedData = async (req, res) => {
       return res.status(201).json({
         status: true,
         message: "succesfully sorted timesheet",
-        save,
+        filterSortedData,
       });
     }
   } catch (error) {
