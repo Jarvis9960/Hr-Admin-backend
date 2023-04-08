@@ -100,6 +100,14 @@ const addInvoiceForEmployee = async (req, res) => {
         message: "Invoice number or service number already exist",
       });
     }
+    
+    const sign = req.file;
+
+    if (!sign) {
+      return res
+        .status(422)
+        .json({ status: false, message: "Sign image is not provided" });
+    }
 
     const newInvoice = new Invoice({
       DateFrom: startDate,
@@ -118,6 +126,7 @@ const addInvoiceForEmployee = async (req, res) => {
       BankName: Bankname,
       AccountNumber: AccountNumber,
       IFSC: IFSC,
+      Sign: sign.path,
     });
 
     const savedInvoice = await newInvoice.save();
