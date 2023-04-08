@@ -45,6 +45,7 @@ app.use(vendorRoute);
 app.use(vendorProfile);
 app.use(vendorAuth);
 app.use(timesheetVendor);
+app.use(express.static((path.join(__dirname, 'public'))));
 
 const port = process.env.PORT;
 const server = app.listen(port, (req, res) => {
