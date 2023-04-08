@@ -50,9 +50,6 @@ const addInvoiceForEmployee = async (req, res) => {
       });
     }
     
-    const newTableObject = table.map((data) => {
-      return JSON.parse(data);
-    });
 
     if (invoiceNo === serviceNo) {
       return res.status(422).json({
@@ -108,7 +105,7 @@ const addInvoiceForEmployee = async (req, res) => {
       Aadhar: aadhar,
       Pan: pan,
       Phone: phone,
-      Table: newTableObject,
+      Table: JSON.parse(table),
       AmountInWord: amountInWord,
       BankName: Bankname,
       AccountNumber: AccountNumber,
