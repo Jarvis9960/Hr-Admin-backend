@@ -26,6 +26,29 @@ const contractorProfileController = async (req, res) => {
       isfcCode,
       panNo,
     } = req.body;
+    
+    console.log(contractorName,
+      contractorEmail,
+      companyName,
+      joinDate,
+      beneficiaryName,
+      role,
+      team,
+      birthday,
+      address,
+      gender,
+      reportTo,
+      idNo,
+      nationality,
+      religion,
+      martialStatus,
+      emergencyContactName,
+      emergencyContactRelation,
+      emergencyContactNumber,
+      bankName,
+      bankAccNo,
+      isfcCode,
+      panNo);
 
     if (
       !contractorName ||
