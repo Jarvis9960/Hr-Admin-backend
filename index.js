@@ -61,7 +61,7 @@ app.use(timesheetVendor);
 app.use(notificaitonRoute);
 app.use(express.static(path.join(__dirname, "public")));
 
-const port = 5000 || process.env.PORT;
+const port = process.env.PORT;
 const server = app.listen(port, (req, res) => {
   console.log(`connection is successful on ${port}`);
 });
