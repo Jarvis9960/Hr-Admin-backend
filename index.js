@@ -61,7 +61,7 @@ app.use(timesheetVendor);
 app.use(notificaitonRoute);
 app.use(express.static(path.join(__dirname, "public")));
 
-const port = process.env.PORT;
+const port = 5000 || process.env.PORT;
 const server = app.listen(port, (req, res) => {
   console.log(`connection is successful on ${port}`);
 });
@@ -130,7 +130,7 @@ io.on("connection", async (socket) => {
     let existingAdmin;
     let token = socket.handshake.query.cookie;
 
-    if (adminId) {
+    if (token) {
       decode = jwt.verify(token, process.env.JWT_SECRET);
     }
     if (decode) {
@@ -144,7 +144,7 @@ io.on("connection", async (socket) => {
 
       if (response) {
         let updateOnlineStatus = await onlineUser.updateOne(
-          { UserEmail: existingAdmin },
+          { UserEmail: existingAdmin.Email },
           { $set: { UserOnlineStatus: true } }
         );
 
@@ -232,7 +232,7 @@ io.on("connection", async (socket) => {
 
         if (response) {
           let updateOnlineStatus = await onlineUser.updateOne(
-            { UserEmail: existingAdmin },
+            { UserEmail: existingAdmin.Email },
             { $set: { UserOnlineStatus: true } }
           );
 
@@ -243,6 +243,7 @@ io.on("connection", async (socket) => {
           let addAdminStatus = new onlineUser({
             UserEmail: existingAdmin.Email,
             UserOnlineStatus: true,
+            IsAdmin: true,
           });
 
           let savedResponse = await addAdminStatus.save();
@@ -280,9 +281,46 @@ io.on("connection", async (socket) => {
 
   socket.on("invoice-filled", async (data) => {
     try {
+      const onlineAdminStatus = await onlineUser.find({
+        IsAdmin: true,
+        UserOnlineStatus: true,
+      });
+      const offlineAdminStatus = await onlineUser.find({
+        IsAdmin: false,
+        UserOnlineStatus: false,
+      });
+
       const onlineUserStatus = await onlineUser.findOne({
         UserEmail: data.email,
       });
+
+      if (onlineAdminStatus.length >= 1) {
+        console.log("inside this function")
+        onlineAdminStatus.forEach(async (element) => {
+          const newNotification = new notification({
+            UserEmail: element.UserEmail,
+            NotificationMessage: data.message,
+            Sent: true,
+          });
+          const savedResponse = await newNotification.save();
+          io.emit("invoice-filled-notified", savedResponse);
+        });
+      }
+
+      if (offlineAdminStatus.length >= 1) {
+        offlineAdminStatus.forEach(async (element) => {
+          const newNotification = new notification({
+            UserEmail: element.UserEmail,
+            NotificationMessage: data.message,
+          });
+
+          const savedResponse = await newNotification.save();
+
+          if (savedResponse) {
+            console.log("notification is saved");
+          }
+        });
+      }
 
       if (onlineUserStatus.UserOnlineStatus) {
         const newNotification = new notification({
@@ -372,7 +410,7 @@ io.on("connection", async (socket) => {
           );
 
           if (updatedOnlineStatus.acknowledged) {
-            console.log("user session is updated to Offline");
+            console.log("admin to Offline");
           }
         }
       }
@@ -425,10 +463,10 @@ io.on("connection", async (socket) => {
       let existingAdmin;
       let token = socket.handshake.query.cookie;
 
-      if (adminId) {
+      if (token) {
         decode = jwt.verify(token, process.env.JWT_SECRET);
       }
-      
+
       if (decode) {
         existingAdmin = await admin.findOne({
           _id: decode.admin_id,
@@ -448,7 +486,7 @@ io.on("connection", async (socket) => {
           );
 
           if (updatedOnlineStatus.acknowledged) {
-            console.log("user session is updated to Offline");
+            console.log("admin to Offline");
           }
         }
       }
