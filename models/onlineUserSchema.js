@@ -9,6 +9,10 @@ const onlineUserSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  IsAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 
