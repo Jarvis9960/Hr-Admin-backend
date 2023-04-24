@@ -30,6 +30,9 @@ const onlineUser = require("./models/onlineUserSchema");
 const notification = require("./models/notficationSchema");
 const notificaitonRoute = require("./routes/notificationRoute");
 const admin = require("./models/adminSchema");
+const contractor = require("./models/contractorAuth");
+const TimesheetContractor = require("./models/timesheetContractorSchema");
+const ContractorProfile = require("./models/contractorProfileSchema");
 
 const app = express();
 
@@ -61,7 +64,7 @@ app.use(timesheetVendor);
 app.use(notificaitonRoute);
 app.use(express.static(path.join(__dirname, "public")));
 
-const port = process.env.PORT;
+const port = 5000 || process.env.PORT;
 const server = app.listen(port, (req, res) => {
   console.log(`connection is successful on ${port}`);
 });
@@ -168,6 +171,51 @@ io.on("connection", async (socket) => {
     console.log(error);
   }
 
+  try {
+    let decode;
+    let existingContractor;
+    let token = socket.handshake.query.cookie;
+
+    if (token) {
+      decode = jwt.verify(token, process.env.JWT_SECRET);
+    }
+    if (decode) {
+      existingContractor = await contractor.findOne({
+        _id: decode.contractor_id,
+      });
+    }
+
+    if (existingContractor) {
+      const response = await onlineUser.findOne({
+        UserEmail: existingContractor.Email,
+      });
+
+      if (response) {
+        let updateOnlineStatus = await onlineUser.updateOne(
+          { UserEmail: existingContractor.Email },
+          { $set: { UserOnlineStatus: true } }
+        );
+
+        if (updateOnlineStatus.acknowledged) {
+          console.log("Contractor is online");
+        }
+      } else {
+        let addContractorStatus = new onlineUser({
+          UserEmail: existingContractor.Email,
+          UserOnlineStatus: true,
+        });
+
+        let savedResponse = await addContractorStatus.save();
+
+        if (savedResponse) {
+          console.log("Contractor is online");
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
   socket.on("user-login", async (userID) => {
     try {
       let decode;
@@ -258,6 +306,52 @@ io.on("connection", async (socket) => {
     }
   });
 
+  socket.on("contractor-login", async (contractorId) => {
+    try {
+      let decode;
+      let existingContractor;
+
+      if (contractorId) {
+        decode = jwt.verify(contractorId, process.env.JWT_SECRET);
+      }
+      if (decode) {
+        existingContractor = await contractor.findOne({
+          _id: decode.contractor_id,
+        });
+      }
+
+      if (existingContractor) {
+        const response = await onlineUser.findOne({
+          UserEmail: existingContractor.Email,
+        });
+
+        if (response) {
+          let updateOnlineStatus = await onlineUser.updateOne(
+            { UserEmail: existingContractor.Email },
+            { $set: { UserOnlineStatus: true } }
+          );
+
+          if (updateOnlineStatus.acknowledged) {
+            console.log("Contractor is online");
+          }
+        } else {
+          let addContractorStatus = new onlineUser({
+            UserEmail: existingContractor.Email,
+            UserOnlineStatus: true,
+          });
+
+          let savedResponse = await addContractorStatus.save();
+
+          if (savedResponse) {
+            console.log("Contractor is online");
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("timesheet", (timesheetInfo) => {
     console.log(timesheetInfo);
     timesheet = timesheetInfo;
@@ -295,7 +389,7 @@ io.on("connection", async (socket) => {
       });
 
       if (onlineAdminStatus.length >= 1) {
-        console.log("inside this function")
+        console.log("inside this function");
         onlineAdminStatus.forEach(async (element) => {
           const newNotification = new notification({
             UserEmail: element.UserEmail,
@@ -349,6 +443,59 @@ io.on("connection", async (socket) => {
 
   socket.on("timesheet-edited", (data) => {
     io.emit("timesheet-edited-notified", data);
+  });
+
+  socket.on("timesheet-approved", async (data) => {
+    try {
+      let existingContractor;
+      let checkIfContractorIsOnline;
+      let date = new Date(data.Date).toLocaleDateString();
+      
+      const userTimesheet = await TimesheetContractor.findOne({
+        "Timesheet._id": data.timesheetId,
+      }).populate("EmployeeName");
+
+      if (userTimesheet) {
+        existingContractor = await ContractorProfile.findOne({
+          ContractorName: userTimesheet.EmployeeName.Contractor,
+        });
+      }
+
+      if (existingContractor) {
+        checkIfContractorIsOnline = await onlineUser.findOne({
+          UserEmail: existingContractor.ContractorEmail,
+          UserOnlineStatus: true,
+        });
+      }
+
+      if (checkIfContractorIsOnline) {
+        const newNotification = new notification({
+          UserEmail: existingContractor.ContractorEmail,
+          NotificationMessage: `Timesheet approved for date ${date} of ${userTimesheet.EmployeeName.Name}`,
+          Sent: true,
+        });
+
+        const savedResponse = await newNotification.save();
+
+        if (savedResponse) {
+          io.emit("timesheet-approved-notified", savedResponse);
+        }
+      } else {
+        const newNotification = new notification({
+          UserEmail: existingContractor.ContractorEmail,
+          NotificationMessage: `Timesheet approved for date ${date} of ${userTimesheet.EmployeeName.Name}`,
+          Sent: false,
+        });
+
+        const savedResponse = await newNotification.save();
+
+        if (savedResponse) {
+          console.log("Approve notification is saved");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   socket.on("user-logout", async (data) => {
@@ -411,6 +558,40 @@ io.on("connection", async (socket) => {
 
           if (updatedOnlineStatus.acknowledged) {
             console.log("admin to Offline");
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("contractor-logout", async (contractorId) => {
+    try {
+      let decode;
+      let existingContractor;
+      if (contractorId) {
+        decode = jwt.verify(contractorId, process.env.JWT_SECRET);
+      }
+      if (decode) {
+        existingContractor = await contractor.findOne({
+          _id: decode.admin_id,
+        });
+      }
+      if (existingContractor) {
+        // sessionStore[existingContractor.Email] = userID;
+        const response = await onlineUser.findOne({
+          UserEmail: existingContractor.Email,
+        });
+
+        if (response) {
+          let updatedOnlineStatus = await onlineUser.updateOne(
+            { UserEmail: existingContractor.Email },
+            { $set: { UserOnlineStatus: false } }
+          );
+
+          if (updatedOnlineStatus.acknowledged) {
+            console.log("contractor is Offline");
           }
         }
       }
@@ -487,6 +668,40 @@ io.on("connection", async (socket) => {
 
           if (updatedOnlineStatus.acknowledged) {
             console.log("admin to Offline");
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      let decode;
+      let existingContractor;
+      let token = socket.handshake.query.cookie;
+
+      if (token) {
+        decode = jwt.verify(token, process.env.JWT_SECRET);
+      }
+      if (decode) {
+        existingContractor = await contractor.findOne({
+          _id: decode.contractor_id,
+        });
+      }
+      if (existingContractor) {
+        // sessionStore[existingContractor.Email] = userID;
+        const response = await onlineUser.findOne({
+          UserEmail: existingContractor.Email,
+        });
+
+        if (response) {
+          let updatedOnlineStatus = await onlineUser.updateOne(
+            { UserEmail: existingContractor.Email },
+            { $set: { UserOnlineStatus: false } }
+          );
+
+          if (updatedOnlineStatus.acknowledged) {
+            console.log("contractor is Offline");
           }
         }
       }
