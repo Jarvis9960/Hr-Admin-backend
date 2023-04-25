@@ -41,5 +41,32 @@ const getNotificationByUser = async (req, res) => {
   }
 };
 
+const deleteNotification = async (req, res) => {
+  try {
+    const { notificationID } = req.query;
 
-module.exports = { getNotificationByUser } ;
+    if (!notificationID) {
+      return res
+        .status(422)
+        .json({ status: false, message: "notification id is not given" });
+    }
+
+    const deletedNotificationResponse = await notification.deleteOne({
+      _id: notificationID,
+    });
+
+    if (deletedNotificationResponse.acknowledged) {
+      return res
+        .status(201)
+        .json({ status: true, message: "notification removed" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(422)
+      .json({ status: false, message: "something went wrong", err: error });
+  }
+};
+
+
+module.exports = { getNotificationByUser, deleteNotification } ;
