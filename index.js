@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "http://localhost:3001"],
     credentials: true,
   })
 );
@@ -81,7 +81,7 @@ connectDB()
 const io = socket(server, {
   pingTimeout: 60000,
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "http://localhost:3001"],
     credentials: true,
   },
 });
