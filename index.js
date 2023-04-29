@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "http://localhost:3001"],
+    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "https://nimble-kleicha-6efc5a.netlify.app"],
     credentials: true,
   })
 );
@@ -81,7 +81,7 @@ connectDB()
 const io = socket(server, {
   pingTimeout: 60000,
   cors: {
-    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "http://localhost:3001"],
+    origin: ["https://hrm-employee-edajzb4lz-ayushsharma4444.vercel.app", "https://nimble-kleicha-6efc5a.netlify.app"],
     credentials: true,
   },
 });
